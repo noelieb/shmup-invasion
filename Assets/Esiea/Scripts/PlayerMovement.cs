@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
             Vector3 movement = transform.forward * m_Speed * Time.deltaTime;
             m_Rigidbody.MovePosition(m_Rigidbody.position + movement);
         }
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow) && transform.position.z > -40)
         {
             Vector3 movement = -transform.forward * m_Speed * Time.deltaTime;
             m_Rigidbody.MovePosition(m_Rigidbody.position + movement);

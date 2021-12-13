@@ -13,8 +13,10 @@ public class gameManager : MonoBehaviour
     private EnemyMovement fondMovement;
 
     [SerializeField] float m_timeBeforeBoss = 10f;
+    [SerializeField] GameObject m_monster;
 
     private Stopwatch stopwatch;
+    private CameraHandler cameraHandler;
     
 
     private void Awake()
@@ -23,6 +25,7 @@ public class gameManager : MonoBehaviour
         stopwatch.Start();
         fondMovement = fond.GetComponent<EnemyMovement>();
         fondMovement.enabled = false;
+        cameraHandler = FindObjectOfType(typeof(CameraHandler)) as CameraHandler;
     }
 
     // Start is called before the first frame update
@@ -46,11 +49,13 @@ public class gameManager : MonoBehaviour
     private void PrepareBossFight()
     {
         UnityEngine.Debug.Log("bossfight");
+        SpawnEnemy();
         stopwatch.Restart();
         terrainSpawner.StopSpawning();
         enemiesSpawner.StopSpawning();
         fondMovement.enabled = true;
         StartCoroutine(GetToEdge());
+        cameraHandler.BossFight();
     }
 
 
@@ -70,7 +75,10 @@ public class gameManager : MonoBehaviour
         {
             boundary.StopMoving();
         }
+    }
 
-
+    void SpawnEnemy()
+    {
+        Instantiate(m_monster, new Vector3(0,0,270), Quaternion.identity);
     }
 }
