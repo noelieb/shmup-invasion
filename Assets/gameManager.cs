@@ -79,6 +79,6 @@ public class gameManager : MonoBehaviour
 
     void SpawnEnemy()
     {
-        Instantiate(m_monster, new Vector3(0,0,270), Quaternion.identity);
+        Instantiate(m_monster, new Vector3(0,0,270), Quaternion.Euler(180*Vector3.up));
     }
 }
