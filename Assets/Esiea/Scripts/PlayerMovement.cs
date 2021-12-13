@@ -19,16 +19,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        //m_particleSystems = GetComponentsInChildren<ParticleSystem>();
-        //for (int i = 0; i < m_particleSystems.Length; ++i)
-        //{
-        //    m_particleSystems[i].Play();
-        //}
-    }
-
-    // Update is called once per frame
     void FixedUpdate()
     {
         Move();

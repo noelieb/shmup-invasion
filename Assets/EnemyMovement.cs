@@ -6,6 +6,8 @@ public class EnemyMovement : MonoBehaviour
 {
     [SerializeField] float m_Speed;
 
+    private bool m_isMoving;
+
 
     // Start is called before the first frame update
     private void Awake()
@@ -14,6 +16,7 @@ public class EnemyMovement : MonoBehaviour
         {
             m_Speed = 10.0f;
         }
+        m_isMoving = true;
     }
 
     private void OnEnable()
@@ -24,12 +27,20 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Move();
+        if (m_isMoving)
+        {
+            Move();
+        }
     }
 
     private void Move()
     {
         Vector3 movement = -transform.forward * m_Speed * Time.deltaTime;
         transform.SetPositionAndRotation( transform.position + movement, transform.rotation);
+    }
+
+    public void StopMoving()
+    {
+        m_isMoving = false;
     }
 }

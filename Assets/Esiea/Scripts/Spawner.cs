@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class Spawner : MonoBehaviour
     private bool m_spawning;
     private float m_totalFrequencies;
     private IEnumerator m_spawningRoutine;
+
+
     public bool IsSpawning() { return m_spawning; }
 
     
@@ -39,12 +42,11 @@ public class Spawner : MonoBehaviour
         while (Application.isPlaying)
         {
             SpawnObject spawnObject = GetRandomSpawnObject();
-            Vector3 randomPosition = spawnObject.leftTop + spawnObject.XAxis * Random.value + spawnObject.ZAxis * Random.value;
-
+            Vector3 randomPosition = spawnObject.leftTop + spawnObject.XAxis * UnityEngine.Random.value + spawnObject.ZAxis * UnityEngine.Random.value;
 
 
             GameObject spawnInstance = Instantiate(spawnObject.m_prefab, randomPosition, Quaternion.identity);
-
+           
             GameObject child = spawnInstance.transform.GetChild(0).gameObject;
             child.transform.Rotate(0, GetRandomFloat(0, 360), 0);
             float scale = GetRandomFloat(spawnObject.m_scaleMin, spawnObject.m_scaleMax);
@@ -62,12 +64,12 @@ public class Spawner : MonoBehaviour
 
     float GetRandomFloat(float min, float max)
     {
-        return Random.value * (max - min) + min;
+        return UnityEngine.Random.value * (max - min) + min;
     }
 
     SpawnObject GetRandomSpawnObject()
     {
-        float rand = Random.value * m_totalFrequencies;
+        float rand = UnityEngine.Random.value * m_totalFrequencies;
         float currentProb = 0;
 
         foreach (var spawnObject in m_spawnObjects)
