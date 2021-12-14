@@ -7,18 +7,12 @@ public class BossManager : MonoBehaviour
 {
     public Animator animator;
     private GameObject player;
-    private Stopwatch m_stopwatchAttack;
-    private Stopwatch m_stopwatchWalk;
-
-    private float m_timeBetweenAttacks = 2f;
-    private float m_timeBetweenTargetSet = 1f;
-
     private Vector3 m_MoveVelocity;
-
+     
     struct Delay
     {
-        Stopwatch s_stopwatch;
-        float s_timeBetween;
+        public Stopwatch s_stopwatch;
+        public float s_timeBetween;
 
         public Delay(Stopwatch stopwatch, float time)
         {
@@ -27,20 +21,21 @@ public class BossManager : MonoBehaviour
         }
     }
 
-    private Dictionary<string, Delay> actions;
+    private Dictionary<string, Delay> actions = new Dictionary<string, Delay>();
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-
         actions.Add("attack", new Delay(new Stopwatch(), 2f));
+        actions.Add("target", new Delay(new Stopwatch(), 1f));
+        actions.Add("walk", new Delay(new Stopwatch(), 3f));
 
-
-        m_stopwatchAttack = new Stopwatch();
-        m_stopwatchWalk = new Stopwatch();
-        m_stopwatchAttack.Start();
-        m_stopwatchWalk.Start();
+        UnityEngine.Debug.Log(actions);
+        foreach (var action in actions)
+        {
+            action.Value.s_stopwatch.Start();
+        }
     }
 
     // Update is called once per frame
@@ -49,31 +44,33 @@ public class BossManager : MonoBehaviour
         float dist = Vector3.Distance(player.transform.position, transform.position);
 
 
-        if (dist < 30 && m_stopwatchAttack.Elapsed.TotalSeconds > m_timeBetweenAttacks)
+        if (dist < 30 && actions["attack"].s_stopwatch.Elapsed.TotalSeconds > actions["attack"].s_timeBetween)
         {
+            actions["attack"].s_stopwatch.Restart();
             int random = (int)(Random.value * 5 + 1);
             UnityEngine.Debug.Log(random);
             animator.SetTrigger("Attack_" + random);
-            m_stopwatchAttack.Restart();
         }
 
-        if (dist < 50 && m_stopwatchAttack.Elapsed.TotalSeconds > m_timeBetweenTargetSet)
+        if (dist < 50 && actions["target"].s_stopwatch.Elapsed.TotalSeconds > actions["target"].s_timeBetween)
         {
-            m_stopwatchWalk.Restart();
+            actions["target"].s_stopwatch.Restart();
             animator.SetTrigger("Walk_Cycle_1");
             Vector3 direction = player.transform.position - transform.position;
             Vector3 current = transform.rotation.eulerAngles;
             Vector3 target = Quaternion.LookRotation(direction).eulerAngles;
             transform.rotation = Quaternion.Euler(Vector3.SmoothDamp(current, target, ref m_MoveVelocity, 0.3f));
         }
-        if (m_stopwatchAttack.Elapsed.TotalSeconds > m_timeBetweenTargetSet && Random.value > 0.5)
+
+        if (actions["walk"].s_stopwatch.Elapsed.TotalSeconds > actions["walk"].s_timeBetween && Random.value > 0.8f)
         {
-            if ()
-            {
-                UnityEngine.Debug.Log("viens");
-                transform.position = Vector3.SmoothDamp(transform.position, transform.position + 1 * (player.transform.position - transform.position), ref m_MoveVelocity, 0.3f);
-            }
+            UnityEngine.Debug.Log("viens");
+            animator.SetTrigger("Walk_Cycle_1");
+
+            actions["walk"].s_stopwatch.Restart();
+
+            transform.position = Vector3.SmoothDamp(transform.position, transform.position + 1 * Vector3.Normalize(player.transform.position - transform.position), ref m_MoveVelocity, 0.3f);
         }
     }
-    }
+
 }
