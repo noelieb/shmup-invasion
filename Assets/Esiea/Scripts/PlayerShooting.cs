@@ -8,13 +8,17 @@ public class PlayerShooting : MonoBehaviour
     [SerializeField] Transform m_bulletSpawnerTransform;
     [SerializeField] Rigidbody m_bullet;
     [SerializeField] float m_msBetweenShots;
+
     private Stopwatch stopwatch;
+    private UserInterface userInterface;
 
 
     private void Awake()
     {
         stopwatch = new Stopwatch();
         stopwatch.Start();
+
+        userInterface = FindObjectOfType<UserInterface>();
     }
     // Start is called before the first frame update
     void Start()
@@ -39,6 +43,6 @@ public class PlayerShooting : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        UnityEngine.Debug.Log("collision");
+        userInterface.DecreasePV(15);
     }
 }

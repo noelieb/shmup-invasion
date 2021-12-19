@@ -29,7 +29,7 @@ public class BossManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         actions.Add("attack", new Delay(new Stopwatch(), 2f));
         actions.Add("target", new Delay(new Stopwatch(), 1f));
-        actions.Add("walk", new Delay(new Stopwatch(), 3f));
+        actions.Add("walk", new Delay(new Stopwatch(), 5f));
 
         UnityEngine.Debug.Log(actions);
         foreach (var action in actions)
@@ -46,6 +46,7 @@ public class BossManager : MonoBehaviour
 
         if (dist < 30 && actions["attack"].s_stopwatch.Elapsed.TotalSeconds > actions["attack"].s_timeBetween)
         {
+            UnityEngine.Debug.Log("attaque");
             actions["attack"].s_stopwatch.Restart();
             int random = (int)(Random.value * 5 + 1);
             UnityEngine.Debug.Log(random);
@@ -54,22 +55,23 @@ public class BossManager : MonoBehaviour
 
         if (dist < 50 && actions["target"].s_stopwatch.Elapsed.TotalSeconds > actions["target"].s_timeBetween)
         {
+            UnityEngine.Debug.Log("target");
             actions["target"].s_stopwatch.Restart();
-            animator.SetTrigger("Walk_Cycle_1");
+            //animator.SetTrigger("Walk_Cycle_1");
             Vector3 direction = player.transform.position - transform.position;
             Vector3 current = transform.rotation.eulerAngles;
             Vector3 target = Quaternion.LookRotation(direction).eulerAngles;
             transform.rotation = Quaternion.Euler(Vector3.SmoothDamp(current, target, ref m_MoveVelocity, 0.3f));
         }
 
-        if (actions["walk"].s_stopwatch.Elapsed.TotalSeconds > actions["walk"].s_timeBetween && Random.value > 0.8f)
+        if (actions["walk"].s_stopwatch.Elapsed.TotalSeconds > actions["walk"].s_timeBetween && Random.value > 0.95f)
         {
-            UnityEngine.Debug.Log("viens");
-            animator.SetTrigger("Walk_Cycle_1");
+            //UnityEngine.Debug.Log("viens");
+            //animator.SetTrigger("Walk_Cycle_1");
 
-            actions["walk"].s_stopwatch.Restart();
+            //actions["walk"].s_stopwatch.Restart();
 
-            transform.position = Vector3.SmoothDamp(transform.position, transform.position + 1 * Vector3.Normalize(player.transform.position - transform.position), ref m_MoveVelocity, 0.3f);
+            //transform.position = Vector3.SmoothDamp(transform.position, transform.position + 1 * Vector3.Normalize(player.transform.position - transform.position), ref m_MoveVelocity, 0.3f);
         }
     }
 
