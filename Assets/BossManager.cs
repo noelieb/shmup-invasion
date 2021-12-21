@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Diagnostics;
+using System;
 
 public class BossManager : MonoBehaviour
 {
     public Animator animator;
     private GameObject player;
     private Vector3 m_MoveVelocity;
+    private int m_pv = 100;
      
     struct Delay
     {
@@ -48,9 +50,10 @@ public class BossManager : MonoBehaviour
         {
             UnityEngine.Debug.Log("attaque");
             actions["attack"].s_stopwatch.Restart();
-            int random = (int)(Random.value * 5 + 1);
+            int random = (int)(UnityEngine.Random.value * 5 + 1);
             UnityEngine.Debug.Log(random);
             animator.SetTrigger("Attack_" + random);
+            FindObjectOfType<UserInterface>().AddPV(-20 - (int)(0.3 * dist));
         }
 
         if (dist < 50 && actions["target"].s_stopwatch.Elapsed.TotalSeconds > actions["target"].s_timeBetween)
@@ -64,7 +67,7 @@ public class BossManager : MonoBehaviour
             transform.rotation = Quaternion.Euler(Vector3.SmoothDamp(current, target, ref m_MoveVelocity, 0.3f));
         }
 
-        if (actions["walk"].s_stopwatch.Elapsed.TotalSeconds > actions["walk"].s_timeBetween && Random.value > 0.95f)
+        if (actions["walk"].s_stopwatch.Elapsed.TotalSeconds > actions["walk"].s_timeBetween && UnityEngine.Random.value > 0.95f)
         {
             //UnityEngine.Debug.Log("viens");
             //animator.SetTrigger("Walk_Cycle_1");
@@ -75,4 +78,13 @@ public class BossManager : MonoBehaviour
         }
     }
 
+    internal void DecreasePV(int value)
+    {
+        m_pv = m_pv - value;
+        FindObjectOfType<UserInterface>().SetPVBoss(m_pv);
+        if (m_pv <= 0)
+        {
+            FindObjectOfType<gameManager>().Win();
+        }
+    }
 }

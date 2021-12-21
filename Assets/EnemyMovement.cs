@@ -6,7 +6,11 @@ public class EnemyMovement : MonoBehaviour
 {
     [SerializeField] float m_Speed;
 
+    [SerializeField] bool overridespecial = false;
+
     private bool m_isMoving;
+
+    public bool IsMoving() { return m_isMoving; }
 
 
     // Start is called before the first frame update
@@ -35,8 +39,16 @@ public class EnemyMovement : MonoBehaviour
 
     private void Move()
     {
-        Vector3 movement = -transform.forward * m_Speed * Time.deltaTime;
-        transform.SetPositionAndRotation( transform.position + movement, transform.rotation);
+        if (overridespecial)
+        {
+            Vector3 movement = new Vector3(0,0,-1) * m_Speed * Time.deltaTime;
+            transform.SetPositionAndRotation(transform.position + movement, transform.rotation);
+        }
+        else
+        {
+            Vector3 movement = -transform.forward * m_Speed * Time.deltaTime;
+            transform.SetPositionAndRotation( transform.position + movement, transform.rotation);
+        }
     }
 
     public void StopMoving()

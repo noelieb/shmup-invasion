@@ -2,6 +2,7 @@
 using System.Collections;
 //using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,6 +33,10 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GameLoop());
     }
 
+    internal void GameOver()
+    {
+        throw new NotImplementedException();
+    }
 
     private void SpawnAllTanks()
     {
